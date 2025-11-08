@@ -10,7 +10,9 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "istvanmolitor/language": "*@dev"
+    },
     "autoload": {
         "psr-4": {
             "Molitor\\Currency\\": "src/"
@@ -20,9 +22,7 @@
         "laravel": {
             "providers": [
                 "Molitor\\Currency\\Providers\\CurrencyServiceProvider"
-            ],
-            "aliases": {
-            }
+            ]
         }
     }
 }

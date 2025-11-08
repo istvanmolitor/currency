@@ -16,7 +16,7 @@ A Molitor Currency egy Laravel csomag devizák (pénznemek) és árfolyamok keze
 Ha önálló csomagként használod:
 
 ```
-composer require molitor/currency
+composer require istvanmolitor/currency
 ```
 
 Monorepo/fejlesztői környezetben (path repository-val) már be van húzva.

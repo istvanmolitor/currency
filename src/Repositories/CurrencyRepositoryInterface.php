@@ -9,7 +9,7 @@ interface CurrencyRepositoryInterface
 {
     public function getDefault(): Currency|null;
 
-    public function getByCode(string $code): Currency|null;
+    public function getByCode(string|null $code): Currency|null;
 
     public function getEnabledCurrencies(): Collection;
 

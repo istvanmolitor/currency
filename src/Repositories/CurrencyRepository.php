@@ -20,8 +20,11 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         return $this->getByCode('HUF');
     }
 
-    public function getByCode(string $code): Currency|null
+    public function getByCode(string|null $code): Currency|null
     {
+        if($code === null) {
+            return $this->getDefault();
+        }
         if (!array_key_exists($code, $this->cache)) {
             $this->cache[$code] = $this->currency->where('code', $code)->first();
         }

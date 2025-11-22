@@ -18,4 +18,6 @@ interface CurrencyRepositoryInterface
     public function getAll(): Collection;
 
     public function getDefaultId(): int|null;
+
+    public function getById(int $currency): Currency|null;
 }

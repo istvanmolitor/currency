@@ -16,4 +16,14 @@ class ExchangeRate extends Model
     ];
 
     const UPDATED_AT = null;
+
+    public function currency1()
+    {
+        return $this->belongsTo(Currency::class, 'currency_1_id');
+    }
+
+    public function currency2()
+    {
+        return $this->belongsTo(Currency::class, 'currency_2_id');
+    }
 }

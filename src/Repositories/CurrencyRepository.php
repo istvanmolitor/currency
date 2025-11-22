@@ -50,4 +50,9 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         return $this->getDefault()?->id;
     }
+
+    public function getById(int $currency): Currency|null
+    {
+        return $this->currency->where('id', $currency)->first();
+    }
 }

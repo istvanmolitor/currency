@@ -62,17 +62,15 @@ class ExchangeRateResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('currency1.code')
-                    ->label('From')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('currency2.code')
-                    ->label('To')
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('value')
                     ->label('Rate')
+                    ->formatStateUsing(fn ($record) => $record->value . ' ' . $record->currency1->code)
                     ->sortable(),
+                Tables\Columns\TextColumn::make('currency2.code')
+                    ->label('To')
+                    ->formatStateUsing(fn ($record) => '1 ' . $record->currency2->code)
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->label('Created at')

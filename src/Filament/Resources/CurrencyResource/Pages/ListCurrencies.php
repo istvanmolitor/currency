@@ -33,18 +33,4 @@ class ListCurrencies extends ListRecords
                 ->icon('heroicon-o-plus'),
         ];
     }
-
-    public function table(Table $table): Table
-    {
-        return CurrencyResource::table($table)
-            ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
-            ])
-            ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
-    }
 }

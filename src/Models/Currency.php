@@ -10,13 +10,34 @@ class Currency extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'enabled',
+        'is_enabled',
+        'is_default',
         'code',
         'name',
         'symbol',
+        'decimals',
+        'decimal_separator',
+        'thousands_separator',
+        'symbol_first',
     ];
 
-    public function __toString()
+    protected $casts = [
+        'is_enabled' => 'boolean',
+        'is_default' => 'boolean',
+        'decimals' => 'integer',
+        'symbol_first' => 'boolean',
+    ];
+
+    protected static function booted(): void
+    {
+        static::deleting(function (self $currency) {
+            if ($currency->is_default) {
+                throw new \RuntimeException(__('currency::currency.cannot_delete_default'));
+            }
+        });
+    }
+
+    public function __toString(): string
     {
         return $this->code;
     }

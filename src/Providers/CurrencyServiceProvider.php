@@ -7,6 +7,7 @@ use Molitor\Currency\Repositories\CurrencyRepository;
 use Molitor\Currency\Repositories\CurrencyRepositoryInterface;
 use Molitor\Currency\Repositories\ExchangeRateRepository;
 use Molitor\Currency\Repositories\ExchangeRateRepositoryInterface;
+use Molitor\Currency\Services\CurrencySettingForm;
 
 class CurrencyServiceProvider extends ServiceProvider
 {

@@ -15,10 +15,15 @@ class CreateCurrenciesTable extends Migration
     {
         Schema::create('currencies', function (Blueprint $table) {
             $table->id();
-            $table->boolean('enabled')->default(false);
+            $table->boolean('is_enabled')->default(false);
+            $table->boolean('is_default')->default(false);
             $table->string('code');
             $table->string('name');
             $table->string('symbol');
+            $table->boolean('is_symbol_first')->default(false);
+            $table->unsignedTinyInteger('decimals')->default(2);
+            $table->string('decimal_separator', 1)->default('.');
+            $table->string('thousands_separator', 1)->default(',');
             $table->timestamps();
         });
     }

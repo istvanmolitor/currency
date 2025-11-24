@@ -40,21 +40,39 @@ class CurrencyResource extends Resource
     {
         return $schema
             ->components([
-                Forms\Components\Toggle::make('enabled')
-                    ->label(__('currency::currency.form.enabled'))
+                Forms\Components\Toggle::make('is_enabled')
+                    ->label(__('currency::common.enabled'))
+                    ->default(true),
+                Forms\Components\Toggle::make('is_default')
+                    ->label(__('currency::common.default'))
                     ->default(true),
                 Forms\Components\TextInput::make('code')
-                    ->label(__('currency::currency.form.code'))
+                    ->label(__('currency::common.code'))
                     ->required()
                     ->maxLength(3)
                     ->unique(ignoreRecord: true),
                 Forms\Components\TextInput::make('name')
-                    ->label(__('currency::currency.form.name'))
+                    ->label(__('currency::common.name'))
                     ->required()
                     ->maxLength(100),
                 Forms\Components\TextInput::make('symbol')
-                    ->label(__('currency::currency.form.symbol'))
+                    ->label(__('currency::common.symbol'))
                     ->maxLength(8),
+                Forms\Components\Toggle::make('is_symbol_first')
+                    ->label(__('currency::common.symbol_first'))
+                    ->default(false),
+                Forms\Components\TextInput::make('decimals')
+                    ->numeric()
+                    ->minValue(0)
+                    ->maxValue(4)
+                    ->label(__('currency::common.decimals'))
+                    ->required(),
+                Forms\Components\TextInput::make('decimal_separator')
+                    ->label(__('currency::common.decimal_separator'))
+                    ->maxLength(1),
+                Forms\Components\TextInput::make('thousands_separator')
+                    ->label(__('currency::common.thousands_separator'))
+                    ->maxLength(1),
             ]);
     }
 
@@ -81,12 +99,10 @@ class CurrencyResource extends Resource
             ])
             ->actions([
                 EditAction::make(),
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->visible(fn (?Currency $record) => $record?->is_default === false),
             ])
             ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
             ]);
     }
 

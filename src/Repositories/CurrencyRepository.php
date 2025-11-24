@@ -17,7 +17,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     public function getDefault(): Currency|null
     {
-        return $this->getByCode('HUF');
+        return $this->currency->where('is_default', 1)->first();
+    }
+
+    public function setDefault(Currency $currency): void
+    {
+        $currency->is_default = true;
+        $currency->save();
+        $this->currency->where('id', '!=', $currency->id)->update(['is_default' => false]);
     }
 
     public function getByCode(string|null $code): Currency|null
@@ -33,7 +40,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     public function getEnabledCurrencies(): Collection
     {
-        return $this->currency->where('enabled', 1)->orderBy('code')->get();
+        return $this->currency->where('is_enabled', 1)->orderBy('code')->get();
     }
 
     public function delete(Currency $currency): bool

@@ -20,4 +20,6 @@ interface CurrencyRepositoryInterface
     public function getDefaultId(): int|null;
 
     public function getById(int $currency): Currency|null;
+
+    public function getEnabledOptions(): array;
 }

@@ -62,4 +62,9 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         return $this->currency->where('id', $currency)->first();
     }
+
+    public function getEnabledOptions(): array
+    {
+        return $this->getEnabledCurrencies()->pluck('code', 'id')->toArray();
+    }
 }

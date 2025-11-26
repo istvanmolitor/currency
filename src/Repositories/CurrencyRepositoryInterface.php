@@ -11,6 +11,8 @@ interface CurrencyRepositoryInterface
 
     public function getDefault(): Currency|null;
 
+    public function setDefault(Currency $currency): void;
+
     public function getByCode(string|null $code): Currency|null;
 
     public function getEnabledCurrencies(): Collection;

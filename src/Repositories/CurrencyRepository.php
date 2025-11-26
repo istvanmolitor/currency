@@ -3,6 +3,7 @@
 namespace Molitor\Currency\Repositories;
 
 use Illuminate\Database\Eloquent\Collection;
+use Molitor\Currency\Events\DefaultCurrencyChanged;
 use Molitor\Currency\Models\Currency;
 
 class CurrencyRepository implements CurrencyRepositoryInterface
@@ -41,9 +42,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     public function setDefault(Currency $currency): void
     {
+        $previousDefault = $this->getDefault();
+
         $currency->is_default = true;
         $currency->save();
-        $this->currency->where('id', '!=', $currency->id)->update(['is_default' => false]);
+
+        $this->currency->where('id', '<>', $currency->id)->update(['is_default' => false]);
+
+        event(new DefaultCurrencyChanged($currency, $previousDefault));
     }
 
     public function getByCode(string|null $code): Currency|null

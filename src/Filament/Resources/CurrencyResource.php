@@ -45,7 +45,7 @@ class CurrencyResource extends Resource
                     ->default(true),
                 Forms\Components\Toggle::make('is_default')
                     ->label(__('currency::common.default'))
-                    ->default(true),
+                    ->default(false),
                 Forms\Components\TextInput::make('code')
                     ->label(__('currency::common.code'))
                     ->required()
@@ -80,7 +80,10 @@ class CurrencyResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\IconColumn::make('enabled')
+                Tables\Columns\IconColumn::make('is_default')
+                    ->boolean()
+                    ->label(__('currency::common.default')),
+                Tables\Columns\IconColumn::make('is_enabled')
                     ->boolean()
                     ->label(__('currency::currency.table.enabled')),
                 Tables\Columns\TextColumn::make('code')
@@ -96,6 +99,9 @@ class CurrencyResource extends Resource
                     ->sortable(),
             ])
             ->filters([
+                Tables\Filters\TernaryFilter::make('is_enabled')
+                    ->label(__('currency::common.enabled'))
+                    ->boolean(),
             ])
             ->actions([
                 EditAction::make(),

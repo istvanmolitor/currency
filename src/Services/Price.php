@@ -48,4 +48,11 @@ class Price
         $price = $exchangeRateRepository->exchange($this->price, $this->currency, $currency);
         return new Price($price, $currency);
     }
+
+    public function exchangeDefault(): Price
+    {
+        /** @var CurrencyRepositoryInterface $currencyRepository */
+        $currencyRepository = app(CurrencyRepositoryInterface::class);
+        return $this->exchange($currencyRepository->getDefault());
+    }
 }

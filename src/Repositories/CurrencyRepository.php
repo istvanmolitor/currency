@@ -15,6 +15,25 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $this->currency = new Currency();
     }
 
+    public function makeCurrency(int|string|Currency|null $currency): Currency|null
+    {
+        if($currency instanceof Currency) {
+            return $currency;
+        }
+        if (is_string($currency)) {
+            return $this->getByCode($currency);
+        }
+        if (is_int($currency)) {
+            return $this->getById($currency);
+        }
+        return $this->getDefault();
+    }
+
+    public function makeId(int|string|Currency|null $currency): int|null
+    {
+        return $this->makeCurrency($currency)->id;
+    }
+
     public function getDefault(): Currency|null
     {
         return $this->currency->where('is_default', 1)->first();

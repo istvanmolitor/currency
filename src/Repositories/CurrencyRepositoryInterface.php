@@ -7,6 +7,8 @@ use Molitor\Currency\Models\Currency;
 
 interface CurrencyRepositoryInterface
 {
+    public function makeCurrency(int|string|Currency|null $currency): Currency|null;
+
     public function getDefault(): Currency|null;
 
     public function getByCode(string|null $code): Currency|null;

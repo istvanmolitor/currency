@@ -18,14 +18,14 @@ class Currency extends Model
         'decimals',
         'decimal_separator',
         'thousands_separator',
-        'symbol_first',
+        'is_symbol_first',
     ];
 
     protected $casts = [
         'is_enabled' => 'boolean',
         'is_default' => 'boolean',
         'decimals' => 'integer',
-        'symbol_first' => 'boolean',
+        'is_symbol_first' => 'boolean',
     ];
 
     protected static function booted(): void

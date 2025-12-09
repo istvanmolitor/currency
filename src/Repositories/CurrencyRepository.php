@@ -11,6 +11,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     private Currency $currency;
     private array $cache = [];
 
+    private Currency|null $defaultCurrency = null;
+
     public function __construct()
     {
         $this->currency = new Currency();
@@ -37,7 +39,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     public function getDefault(): Currency|null
     {
-        return $this->currency->where('is_default', 1)->first();
+        if($this->defaultCurrency === null) {
+            $this->currency = $this->currency->where('is_default', 1)->first();
+        }
+        return $this->currency;
     }
 
     public function setDefault(Currency $currency): void

@@ -21,6 +21,9 @@ class Price
 
     protected function makeCurrency(int|string|Currency|null $currency): Currency|null
     {
+        if($currency instanceof Currency) {
+            return $currency;
+        }
         /** @var CurrencyRepositoryInterface $currencyRepository */
         $currencyRepository = app(CurrencyRepositoryInterface::class);
         return $currencyRepository->makeCurrency($currency);
@@ -54,5 +57,16 @@ class Price
         /** @var CurrencyRepositoryInterface $currencyRepository */
         $currencyRepository = app(CurrencyRepositoryInterface::class);
         return $this->exchange($currencyRepository->getDefault());
+    }
+
+    public function multiple(float $factor): Price
+    {
+        return new Price($this->price * $factor, $this->currency);
+    }
+
+    public function addition(Price $price): Price
+    {
+        $price = $price->exchange($this->currency);
+        return new Price($this->price + $price->price, $this->currency);
     }
 }

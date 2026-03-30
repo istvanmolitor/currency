@@ -9,13 +9,13 @@ use Molitor\Currency\Models\ExchangeRate;
 class ExchangeRateRepository implements ExchangeRateRepositoryInterface
 {
     private array $cache = [];
+
     private ExchangeRate $exchangeRate;
 
     public function __construct(
         private CurrencyRepositoryInterface $currencyRepository
-    )
-    {
-        $this->exchangeRate = new ExchangeRate();
+    ) {
+        $this->exchangeRate = new ExchangeRate;
     }
 
     public function update(): void
@@ -40,9 +40,9 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
         }
     }
 
-    protected function getValue(Currency $sourceCurrency, Currency $destinationCurrency): float|null
+    protected function getValue(Currency $sourceCurrency, Currency $destinationCurrency): ?float
     {
-        if($sourceCurrency->id === $destinationCurrency->id) {
+        if ($sourceCurrency->id === $destinationCurrency->id) {
             return 1;
         }
         $exchangeRate = $this->exchangeRate->where(function ($query) use ($sourceCurrency, $destinationCurrency) {
@@ -53,11 +53,11 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
                 ->where('currency_2_id', $sourceCurrency->id);
         })->orderBy('created_at', 'desc')->first();
 
-        if (!$exchangeRate) {
+        if (! $exchangeRate) {
             return null;
         }
 
-        if($sourceCurrency->id === $exchangeRate->currency_1_id) {
+        if ($sourceCurrency->id === $exchangeRate->currency_1_id) {
             return 1 / $exchangeRate->value;
         }
 
@@ -80,20 +80,22 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
                     $currencyIds[] = $item->currency_2_id;
                 }
             });
+
         return array_unique($currencyIds);
     }
 
-    public function getGeteId(int $currencyId1, int $currencyId2): int|null
+    public function getGeteId(int $currencyId1, int $currencyId2): ?int
     {
-        $intersect =  array_intersect($this->getRelatedIds($currencyId1), $this->getRelatedIds($currencyId2));
+        $intersect = array_intersect($this->getRelatedIds($currencyId1), $this->getRelatedIds($currencyId2));
+
         return array_first($intersect);
     }
 
     public function getRate(Currency $sourceCurrency, Currency $destinationCurrency): float
     {
-        if (!isset($this->cache[$sourceCurrency->id][$destinationCurrency->id])) {
+        if (! isset($this->cache[$sourceCurrency->id][$destinationCurrency->id])) {
             $rate = $this->getValue($sourceCurrency, $destinationCurrency);
-            if($rate === null) {
+            if ($rate === null) {
                 throw new ExchangeException("No exchange rate found for {$sourceCurrency->code} to {$destinationCurrency->code}");
             }
             $this->cache[$sourceCurrency->id][$destinationCurrency->id] = $rate;
@@ -106,10 +108,9 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
     {
         try {
             return $price * $this->getRate($sourceCurrency, $destinationCurrency);
-        }
-        catch (ExchangeException $e) {
+        } catch (ExchangeException $e) {
             $gateId = $this->getGeteId($sourceCurrency->id, $destinationCurrency->id);
-            if($gateId === null) {
+            if ($gateId === null) {
                 throw $e;
             }
 

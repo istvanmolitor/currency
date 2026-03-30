@@ -9,18 +9,19 @@ use Molitor\Currency\Models\Currency;
 class CurrencyRepository implements CurrencyRepositoryInterface
 {
     private Currency $currency;
+
     private array $cache = [];
 
-    private Currency|null $defaultCurrency = null;
+    private ?Currency $defaultCurrency = null;
 
     public function __construct()
     {
-        $this->currency = new Currency();
+        $this->currency = new Currency;
     }
 
-    public function makeCurrency(int|string|Currency|null $currency): Currency|null
+    public function makeCurrency(int|string|Currency|null $currency): ?Currency
     {
-        if($currency instanceof Currency) {
+        if ($currency instanceof Currency) {
             return $currency;
         }
         if (is_string($currency)) {
@@ -29,19 +30,21 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         if (is_int($currency)) {
             return $this->getById($currency);
         }
+
         return $this->getDefault();
     }
 
-    public function makeId(int|string|Currency|null $currency): int|null
+    public function makeId(int|string|Currency|null $currency): ?int
     {
         return $this->makeCurrency($currency)->id;
     }
 
-    public function getDefault(): Currency|null
+    public function getDefault(): ?Currency
     {
-        if($this->defaultCurrency === null) {
+        if ($this->defaultCurrency === null) {
             $this->currency = $this->currency->where('is_default', 1)->first();
         }
+
         return $this->currency;
     }
 
@@ -57,14 +60,15 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         event(new DefaultCurrencyChanged($currency, $previousDefault));
     }
 
-    public function getByCode(string|null $code): Currency|null
+    public function getByCode(?string $code): ?Currency
     {
-        if($code === null) {
+        if ($code === null) {
             return $this->getDefault();
         }
-        if (!array_key_exists($code, $this->cache)) {
+        if (! array_key_exists($code, $this->cache)) {
             $this->cache[$code] = $this->currency->where('code', $code)->first();
         }
+
         return $this->cache[$code];
     }
 
@@ -83,12 +87,12 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         return $this->currency->orderBy('name')->get();
     }
 
-    public function getDefaultId(): int|null
+    public function getDefaultId(): ?int
     {
         return $this->getDefault()?->id;
     }
 
-    public function getById(int $currency): Currency|null
+    public function getById(int $currency): ?Currency
     {
         return $this->currency->where('id', $currency)->first();
     }

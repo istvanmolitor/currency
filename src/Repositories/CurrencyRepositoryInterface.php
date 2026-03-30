@@ -7,13 +7,13 @@ use Molitor\Currency\Models\Currency;
 
 interface CurrencyRepositoryInterface
 {
-    public function makeCurrency(int|string|Currency|null $currency): Currency|null;
+    public function makeCurrency(int|string|Currency|null $currency): ?Currency;
 
-    public function getDefault(): Currency|null;
+    public function getDefault(): ?Currency;
 
     public function setDefault(Currency $currency): void;
 
-    public function getByCode(string|null $code): Currency|null;
+    public function getByCode(?string $code): ?Currency;
 
     public function getEnabledCurrencies(): Collection;
 
@@ -21,9 +21,9 @@ interface CurrencyRepositoryInterface
 
     public function getAll(): Collection;
 
-    public function getDefaultId(): int|null;
+    public function getDefaultId(): ?int;
 
-    public function getById(int $currency): Currency|null;
+    public function getById(int $currency): ?Currency;
 
     public function getEnabledOptions(): array;
 }

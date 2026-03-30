@@ -28,8 +28,7 @@ class ExchangeRateUpdate extends Command
      */
     public function __construct(
         private ExchangeRateRepositoryInterface $exchangeRateRepository
-    )
-    {
+    ) {
         parent::__construct();
     }
 
@@ -41,6 +40,7 @@ class ExchangeRateUpdate extends Command
     public function handle()
     {
         $this->exchangeRateRepository->update();
+
         return 0;
     }
 }

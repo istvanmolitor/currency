@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ExchangeRate extends Model
 {
     protected $table = 'exchange_rates';
+
     protected $primaryKey = 'id';
 
     protected $fillable = [

@@ -2,14 +2,16 @@
 
 namespace Molitor\Currency\Filament\Components;
 
-use Molitor\Currency\Repositories\CurrencyRepositoryInterface;
 use Filament\Forms;
+use Molitor\Currency\Repositories\CurrencyRepositoryInterface;
 
 class EnabledCurrencySelect
 {
-    public static function make(string $name) {
+    public static function make(string $name)
+    {
         /** @var CurrencyRepositoryInterface $currencyRepository */
         $currencyRepository = app(CurrencyRepositoryInterface::class);
+
         return Forms\Components\Select::make($name)
             ->label(__('product::common.currency'))
             ->options($currencyRepository->getEnabledOptions())

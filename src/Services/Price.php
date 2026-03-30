@@ -11,7 +11,8 @@ class Price
     public float $price;
 
     public Currency $currency;
-    protected null|int $decimals = null;
+
+    protected ?int $decimals = null;
 
     public function __construct(float $price, null|int|string|Currency $currency)
     {
@@ -19,13 +20,14 @@ class Price
         $this->currency = $this->makeCurrency($currency);
     }
 
-    protected function makeCurrency(int|string|Currency|null $currency): Currency|null
+    protected function makeCurrency(int|string|Currency|null $currency): ?Currency
     {
-        if($currency instanceof Currency) {
+        if ($currency instanceof Currency) {
             return $currency;
         }
         /** @var CurrencyRepositoryInterface $currencyRepository */
         $currencyRepository = app(CurrencyRepositoryInterface::class);
+
         return $currencyRepository->makeCurrency($currency);
     }
 
@@ -33,22 +35,24 @@ class Price
     {
         $decimals = $this->decimals ?? $this->currency->decimals;
         $number = number_format($this->price, $decimals, $this->currency->decimal_separator, $this->currency->thousands_separator);
-        if($this->currency->is_symbol_first) {
-            return $this->currency->symbol . ' ' . $number;
+        if ($this->currency->is_symbol_first) {
+            return $this->currency->symbol.' '.$number;
         }
-        return $number . ' ' . $this->currency->symbol;
+
+        return $number.' '.$this->currency->symbol;
     }
 
     public function exchange(int|string|Currency|null $currency): Price
     {
         $currency = $this->makeCurrency($currency);
-        if($this->currency->id === $currency->id) {
+        if ($this->currency->id === $currency->id) {
             return $this;
         }
 
         /** @var ExchangeRateRepositoryInterface $exchangeRateRepository */
         $exchangeRateRepository = app(ExchangeRateRepositoryInterface::class);
         $price = $exchangeRateRepository->exchange($this->price, $this->currency, $currency);
+
         return new Price($price, $currency);
     }
 
@@ -56,6 +60,7 @@ class Price
     {
         /** @var CurrencyRepositoryInterface $currencyRepository */
         $currencyRepository = app(CurrencyRepositoryInterface::class);
+
         return $this->exchange($currencyRepository->getDefault());
     }
 
@@ -67,6 +72,7 @@ class Price
     public function addition(Price $price): Price
     {
         $price = $price->exchange($this->currency);
+
         return new Price($this->price + $price->price, $this->currency);
     }
 }

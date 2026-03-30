@@ -2,13 +2,8 @@
 
 namespace Molitor\Currency\Filament\Resources\CurrencyResource\Pages;
 
-use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Tables\Table;
 use Molitor\Currency\Filament\Resources\CurrencyResource;
 
 class ListCurrencies extends ListRecords

@@ -1,9 +1,9 @@
 <?php
 
-namespace Molitor\Currency\database\seeders;
+namespace Molitor\Currency\Database\Seeders;
 
-use Molitor\Currency\Models\Currency;
 use Illuminate\Database\Seeder;
+use Molitor\Currency\Models\Currency;
 use Molitor\User\Exceptions\PermissionException;
 use Molitor\User\Services\AclManagementService;
 

@@ -2,6 +2,7 @@
 
 namespace Molitor\Currency\Providers;
 
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Molitor\Currency\Repositories\CurrencyRepository;
 use Molitor\Currency\Repositories\CurrencyRepositoryInterface;
@@ -16,7 +17,7 @@ class CurrencyServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__.'/../../resources/lang', 'currency');
 
         // Load API routes with /api prefix
-        $this->app->make(\Illuminate\Routing\Router::class)
+        $this->app->make(Router::class)
             ->prefix('api')
             ->group(__DIR__.'/../routes/api.php');
     }

@@ -66,6 +66,81 @@ class CurrencyController extends Controller
     }
 
     #[OA\Get(
+        path: '/api/admin/currency/currencies/select',
+        summary: 'Search currencies for select inputs',
+        tags: ['Currencies'],
+        parameters: [
+            new OA\Parameter(name: 'search', in: 'query', required: false, schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'per_page', in: 'query', required: false, schema: new OA\Schema(type: 'integer', default: 20)),
+            new OA\Parameter(name: 'include_disabled', in: 'query', required: false, schema: new OA\Schema(type: 'boolean', default: false)),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Success',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'data',
+                            type: 'array',
+                            items: new OA\Items(ref: '#/components/schemas/Currency')
+                        ),
+                        new OA\Property(
+                            property: 'meta',
+                            type: 'object',
+                            properties: [
+                                new OA\Property(property: 'current_page', type: 'integer'),
+                                new OA\Property(property: 'last_page', type: 'integer'),
+                                new OA\Property(property: 'per_page', type: 'integer'),
+                                new OA\Property(property: 'total', type: 'integer'),
+                            ]
+                        ),
+                    ]
+                )
+            ),
+        ]
+    )]
+    public function select(Request $request): JsonResponse
+    {
+        $search = trim((string) $request->input('search', ''));
+        $perPage = max(1, min(500, (int) $request->input('per_page', 20)));
+        $includeDisabled = $request->boolean('include_disabled', false);
+
+        $query = Currency::query();
+
+        if (! $includeDisabled) {
+            $query->where('is_enabled', true);
+        }
+
+        if ($search !== '') {
+            $query->where(function ($query) use ($search): void {
+                $query->where('code', 'like', '%'.$search.'%')
+                    ->orWhere('name', 'like', '%'.$search.'%')
+                    ->orWhere('symbol', 'like', '%'.$search.'%');
+            });
+        }
+
+        $currencies = $query
+            ->orderBy('code')
+            ->paginate($perPage)
+            ->withQueryString();
+
+        return response()->json([
+            'data' => CurrencyResource::collection($currencies->items()),
+            'meta' => [
+                'current_page' => $currencies->currentPage(),
+                'last_page' => $currencies->lastPage(),
+                'per_page' => $currencies->perPage(),
+                'total' => $currencies->total(),
+            ],
+            'filters' => [
+                'search' => $search,
+                'include_disabled' => $includeDisabled,
+            ],
+        ]);
+    }
+
+    #[OA\Get(
         path: '/api/admin/currency/currencies/create',
         summary: 'Show form for creating a currency',
         tags: ['Currencies'],

@@ -8,5 +8,6 @@ Route::prefix('admin/currency')
     ->middleware(['api', 'auth:sanctum'])
     ->name('currency.')
     ->group(function () {
+        Route::get('currencies/select', [CurrencyController::class, 'select']);
         Route::resource('currencies', CurrencyController::class);
     });

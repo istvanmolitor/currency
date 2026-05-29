@@ -119,8 +119,6 @@ A csomag biztosít egy Filament Resource-t a devizák kezeléséhez:
 
 Ez megjelenik a Filament adminban (Settings / Currencies csoportban) és lehetővé teszi a devizák listázását és létrehozását. A táblázat oszlopai: Enabled, Code, Name, Symbol, időbélyegek.
 
-Megjegyzés: A konkrét Filament verzió (v4) támogatott. Ha ikonok/akciók hiányoznak, ellenőrizd a filament/filament csomag verzióját és a kompatibilitást.
-
 ## Adatbázis séma
 
 - currencies: id, enabled (bool), code (string, max 3), name (string), symbol (string), timestamps

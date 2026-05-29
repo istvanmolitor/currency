@@ -101,4 +101,20 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         return $this->getEnabledCurrencies()->pluck('code', 'id')->toArray();
     }
+
+    /**
+     * @param array<string, mixed> $validated
+     */
+    public function create(string $code, string $name, string $symbol, array $validated): Currency
+    {
+        if ($validated['is_default'] ?? false) {
+            $this->currency->where('is_default', true)->update(['is_default' => false]);
+        }
+
+        return $this->currency->create(array_merge($validated, [
+            'code' => $code,
+            'name' => $name,
+            'symbol' => $symbol,
+        ]));
+    }
 }

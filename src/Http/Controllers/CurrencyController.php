@@ -10,11 +10,16 @@ use Molitor\Currency\Http\Requests\StoreCurrencyRequest;
 use Molitor\Currency\Http\Requests\UpdateCurrencyRequest;
 use Molitor\Currency\Http\Resources\CurrencyResource;
 use Molitor\Currency\Models\Currency;
+use Molitor\Currency\Repositories\CurrencyRepositoryInterface;
 use OpenApi\Attributes as OA;
 
 class CurrencyController extends Controller
 {
     use HasAdminFilters;
+
+    public function __construct(
+        private CurrencyRepositoryInterface $currencyRepository
+    ) {}
 
     #[OA\Get(
         path: '/api/admin/currency/currencies',
@@ -179,12 +184,12 @@ class CurrencyController extends Controller
     {
         $validated = $request->validated();
 
-        // If this currency is set as default, unset all other defaults
-        if ($validated['is_default'] ?? false) {
-            Currency::where('is_default', true)->update(['is_default' => false]);
-        }
-
-        $currency = Currency::create($validated);
+        $currency = $this->currencyRepository->create(
+            $validated['code'],
+            $validated['name'],
+            $validated['symbol'],
+            $validated,
+        );
 
         return response()->json([
             'data' => new CurrencyResource($currency),

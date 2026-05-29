@@ -103,7 +103,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param array<string, mixed> $validated
+     * @param  array<string, mixed>  $validated
      */
     public function create(string $code, string $name, string $symbol, array $validated): Currency
     {
@@ -116,5 +116,25 @@ class CurrencyRepository implements CurrencyRepositoryInterface
             'name' => $name,
             'symbol' => $symbol,
         ]));
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     */
+    public function update(Currency $currency, string $code, string $name, string $symbol, array $validated): Currency
+    {
+        if ($validated['is_default'] ?? false) {
+            $this->currency->where('is_default', true)
+                ->where('id', '!=', $currency->id)
+                ->update(['is_default' => false]);
+        }
+
+        $currency->update(array_merge($validated, [
+            'code' => $code,
+            'name' => $name,
+            'symbol' => $symbol,
+        ]));
+
+        return $currency;
     }
 }

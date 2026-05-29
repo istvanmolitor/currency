@@ -273,14 +273,13 @@ class CurrencyController extends Controller
     {
         $validated = $request->validated();
 
-        // If this currency is set as default, unset all other defaults
-        if ($validated['is_default'] ?? false) {
-            Currency::where('is_default', true)
-                ->where('id', '!=', $currency->id)
-                ->update(['is_default' => false]);
-        }
-
-        $currency->update($validated);
+        $currency = $this->currencyRepository->update(
+            $currency,
+            $validated['code'],
+            $validated['name'],
+            $validated['symbol'],
+            $validated,
+        );
 
         return response()->json([
             'data' => new CurrencyResource($currency),

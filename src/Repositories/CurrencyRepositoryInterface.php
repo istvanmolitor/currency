@@ -28,7 +28,12 @@ interface CurrencyRepositoryInterface
     public function getEnabledOptions(): array;
 
     /**
-     * @param array<string, mixed> $validated
+     * @param  array<string, mixed>  $validated
      */
     public function create(string $code, string $name, string $symbol, array $validated): Currency;
+
+    /**
+     * @param  array<string, mixed>  $validated
+     */
+    public function update(Currency $currency, string $code, string $name, string $symbol, array $validated): Currency;
 }

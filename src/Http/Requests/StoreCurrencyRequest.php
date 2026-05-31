@@ -4,6 +4,7 @@ namespace Molitor\Currency\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -30,7 +31,7 @@ class StoreCurrencyRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Gate::allows('acl', 'currency');
     }
 
     /**

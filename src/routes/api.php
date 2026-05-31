@@ -5,7 +5,7 @@ use Molitor\Currency\Http\Controllers\CurrencyController;
 
 // Admin routes
 Route::prefix('admin/currency')
-    ->middleware(['api', 'auth:sanctum'])
+    ->middleware(['api', 'auth:sanctum', 'permission:currency'])
     ->name('currency.')
     ->group(function () {
         Route::get('currencies/select', [CurrencyController::class, 'select']);

@@ -20,6 +20,11 @@ class CurrencyDataTable extends DataTable
         return CurrencyResource::class;
     }
 
+    protected function getSearchPlaceholder(): string
+    {
+        return 'Keresés kód vagy név alapján...';
+    }
+
     protected function initColumns(): void
     {
         $this->addColumn('code')

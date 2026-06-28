@@ -4,8 +4,10 @@ namespace Molitor\Currency\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Molitor\Admin\Traits\HasAdminFilters;
+use Molitor\Currency\DataTables\CurrencyDataTable;
 use Molitor\Currency\Http\Requests\StoreCurrencyRequest;
 use Molitor\Currency\Http\Requests\UpdateCurrencyRequest;
 use Molitor\Currency\Http\Resources\CurrencyResource;
@@ -51,23 +53,9 @@ class CurrencyController extends Controller
             ),
         ]
     )]
-    public function index(Request $request): JsonResponse
+    public function index(CurrencyDataTable $dataTable): AnonymousResourceCollection
     {
-        $query = Currency::query();
-        $currencies = $this->applyAdminFilters($query, $request, ['code', 'name'])
-            ->paginate(10)
-            ->withQueryString();
-
-        return response()->json([
-            'data' => CurrencyResource::collection($currencies->items()),
-            'meta' => [
-                'current_page' => $currencies->currentPage(),
-                'last_page' => $currencies->lastPage(),
-                'per_page' => $currencies->perPage(),
-                'total' => $currencies->total(),
-            ],
-            'filters' => $request->only(['search', 'sort', 'direction']),
-        ]);
+        return $dataTable->getResponse();
     }
 
     #[OA\Get(

@@ -13,7 +13,6 @@ use Molitor\Currency\Http\Requests\UpdateCurrencyRequest;
 use Molitor\Currency\Http\Resources\CurrencyResource;
 use Molitor\Currency\Models\Currency;
 use Molitor\Currency\Repositories\CurrencyRepositoryInterface;
-use OpenApi\Attributes as OA;
 
 class CurrencyController extends Controller
 {
@@ -23,76 +22,11 @@ class CurrencyController extends Controller
         private CurrencyRepositoryInterface $currencyRepository
     ) {}
 
-    #[OA\Get(
-        path: '/api/admin/currency/currencies',
-        summary: 'List all currencies',
-        tags: ['Currencies'],
-        responses: [
-            new OA\Response(
-                response: 200,
-                description: 'Success',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(
-                            property: 'data',
-                            type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/Currency')
-                        ),
-                        new OA\Property(
-                            property: 'meta',
-                            type: 'object',
-                            properties: [
-                                new OA\Property(property: 'current_page', type: 'integer'),
-                                new OA\Property(property: 'last_page', type: 'integer'),
-                                new OA\Property(property: 'per_page', type: 'integer'),
-                                new OA\Property(property: 'total', type: 'integer'),
-                            ]
-                        ),
-                    ]
-                )
-            ),
-        ]
-    )]
     public function index(CurrencyDataTable $dataTable): AnonymousResourceCollection
     {
         return $dataTable->getResponse();
     }
 
-    #[OA\Get(
-        path: '/api/admin/currency/currencies/select',
-        summary: 'Search currencies for select inputs',
-        tags: ['Currencies'],
-        parameters: [
-            new OA\Parameter(name: 'search', in: 'query', required: false, schema: new OA\Schema(type: 'string')),
-            new OA\Parameter(name: 'per_page', in: 'query', required: false, schema: new OA\Schema(type: 'integer', default: 20)),
-            new OA\Parameter(name: 'include_disabled', in: 'query', required: false, schema: new OA\Schema(type: 'boolean', default: false)),
-        ],
-        responses: [
-            new OA\Response(
-                response: 200,
-                description: 'Success',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(
-                            property: 'data',
-                            type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/Currency')
-                        ),
-                        new OA\Property(
-                            property: 'meta',
-                            type: 'object',
-                            properties: [
-                                new OA\Property(property: 'current_page', type: 'integer'),
-                                new OA\Property(property: 'last_page', type: 'integer'),
-                                new OA\Property(property: 'per_page', type: 'integer'),
-                                new OA\Property(property: 'total', type: 'integer'),
-                            ]
-                        ),
-                    ]
-                )
-            ),
-        ]
-    )]
     public function select(Request $request): JsonResponse
     {
         $search = trim((string) $request->input('search', ''));
@@ -133,41 +67,11 @@ class CurrencyController extends Controller
         ]);
     }
 
-    #[OA\Get(
-        path: '/api/admin/currency/currencies/create',
-        summary: 'Show form for creating a currency',
-        tags: ['Currencies'],
-        responses: [
-            new OA\Response(response: 200, description: 'Success'),
-        ]
-    )]
     public function create(): JsonResponse
     {
         return response()->json([]);
     }
 
-    #[OA\Post(
-        path: '/api/admin/currency/currencies',
-        summary: 'Store a new currency',
-        tags: ['Currencies'],
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/StoreCurrencyRequest')
-        ),
-        responses: [
-            new OA\Response(
-                response: 201,
-                description: 'Created',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: 'data', ref: '#/components/schemas/Currency'),
-                        new OA\Property(property: 'message', type: 'string'),
-                    ]
-                )
-            ),
-            new OA\Response(response: 422, description: 'Validation error'),
-        ]
-    )]
     public function store(StoreCurrencyRequest $request): JsonResponse
     {
         $validated = $request->validated();
@@ -185,26 +89,6 @@ class CurrencyController extends Controller
         ], 201);
     }
 
-    #[OA\Get(
-        path: '/api/admin/currency/currencies/{currency}',
-        summary: 'Display a specific currency',
-        tags: ['Currencies'],
-        parameters: [
-            new OA\Parameter(name: 'currency', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
-        ],
-        responses: [
-            new OA\Response(
-                response: 200,
-                description: 'Success',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: 'data', ref: '#/components/schemas/Currency'),
-                    ]
-                )
-            ),
-            new OA\Response(response: 404, description: 'Not found'),
-        ]
-    )]
     public function show(Currency $currency): JsonResponse
     {
         return response()->json([
@@ -212,18 +96,6 @@ class CurrencyController extends Controller
         ]);
     }
 
-    #[OA\Get(
-        path: '/api/admin/currency/currencies/{currency}/edit',
-        summary: 'Show form for editing a currency',
-        tags: ['Currencies'],
-        parameters: [
-            new OA\Parameter(name: 'currency', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
-        ],
-        responses: [
-            new OA\Response(response: 200, description: 'Success'),
-            new OA\Response(response: 404, description: 'Not found'),
-        ]
-    )]
     public function edit(Currency $currency): JsonResponse
     {
         return response()->json([
@@ -231,32 +103,6 @@ class CurrencyController extends Controller
         ]);
     }
 
-    #[OA\Put(
-        path: '/api/admin/currency/currencies/{currency}',
-        summary: 'Update a currency',
-        tags: ['Currencies'],
-        parameters: [
-            new OA\Parameter(name: 'currency', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
-        ],
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/UpdateCurrencyRequest')
-        ),
-        responses: [
-            new OA\Response(
-                response: 200,
-                description: 'Success',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: 'data', ref: '#/components/schemas/Currency'),
-                        new OA\Property(property: 'message', type: 'string'),
-                    ]
-                )
-            ),
-            new OA\Response(response: 422, description: 'Validation error'),
-            new OA\Response(response: 404, description: 'Not found'),
-        ]
-    )]
     public function update(UpdateCurrencyRequest $request, Currency $currency): JsonResponse
     {
         $validated = $request->validated();
@@ -275,18 +121,6 @@ class CurrencyController extends Controller
         ]);
     }
 
-    #[OA\Delete(
-        path: '/api/admin/currency/currencies/{currency}',
-        summary: 'Delete a currency',
-        tags: ['Currencies'],
-        parameters: [
-            new OA\Parameter(name: 'currency', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
-        ],
-        responses: [
-            new OA\Response(response: 200, description: 'Success'),
-            new OA\Response(response: 404, description: 'Not found'),
-        ]
-    )]
     public function destroy(Currency $currency): JsonResponse
     {
         $currency->delete();

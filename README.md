@@ -95,6 +95,18 @@ Hasznos metódusok:
   - getRate(Currency $from, Currency $to): float
   - exchange(float $price, Currency $from, Currency $to): float
 
+### Price helper
+
+A csomag globális `price()` helper függvényt biztosít, amely egy `Molitor\Currency\Services\Price` objektumot ad vissza az alapértelmezett devizanemben:
+
+```php
+$price = price(1234.5); // Price objektum, currency = getDefault()
+
+echo (string) $price; // pl. "1 234,50 Ft"
+
+$usd = $price->exchange('USD'); // átváltás másik devizára
+```
+
 ### Árfolyam frissítés parancs
 
 A csomag tartalmaz egy artisan parancsot:

@@ -16,7 +16,10 @@
     "autoload": {
         "psr-4": {
             "Molitor\\Currency\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "extra": {
         "laravel": {

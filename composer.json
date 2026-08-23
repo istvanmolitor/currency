@@ -1,6 +1,6 @@
 {
     "name": "istvanmolitor/currency",
-    "description": "Currency",
+    "description": "Multi-currency support with exchange rates, price conversion, and scheduled rate updates for the Molitor package suite.",
     "type": "library",
     "license": "MIT",
     "authors": [

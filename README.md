@@ -1,6 +1,12 @@
 # Molitor Currency
 
-A Molitor Currency egy Laravel csomag devizák (pénznemek) és árfolyamok kezeléséhez. Tartalmaz:
+A Molitor Currency egy Laravel csomag devizák (pénznemek) és árfolyamok kezeléséhez.
+
+## Függőségek
+
+- `istvanmolitor/language` (composer `require`)
+
+Tartalmaz:
 
 - Eloquent modelleket (Currency, ExchangeRate)
 - Migrációkat a currencies és exchange_rates táblákhoz
@@ -123,13 +129,14 @@ Cron példa (Laravel Scheduler):
 $schedule->command('exchange-rate:update')->hourly();
 ```
 
-### Filament integráció
+### Admin integráció
 
-A csomag biztosít egy Filament Resource-t a devizák kezeléséhez:
+A csomag nem Filament-et használ, hanem a `istvanmolitor/admin` csomag `DataTable`/`HasAdminFilters` alapjaira épülő saját admin API-t biztosít:
 
-- Molitor\Currency\Filament\Resources\CurrencyResource
+- Molitor\Currency\DataTables\CurrencyDataTable — szerver oldali kereső/rendező táblázat (kód, név, szimbólum, alapértelmezett, engedélyezett oszlopok)
+- Molitor\Currency\Http\Controllers\CurrencyController — REST erőforrás-kontroller (`index`, `select`, `store`, `show`, `edit`, `update`, `destroy`)
 
-Ez megjelenik a Filament adminban (Settings / Currencies csoportban) és lehetővé teszi a devizák listázását és létrehozását. A táblázat oszlopai: Enabled, Code, Name, Symbol, időbélyegek.
+Az admin route-ok a `routes/api.php`-ban vannak, `/api/admin/currency/currencies` alatt, `auth:sanctum` és `permission:currency` middleware-rel védve.
 
 ## Adatbázis séma
 
